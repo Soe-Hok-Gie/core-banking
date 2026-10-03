@@ -24,4 +24,5 @@ jobs:
         env:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }} # Mengambil dari brankas GitHub
         run: |
+          cd cmd
           go run main.go
