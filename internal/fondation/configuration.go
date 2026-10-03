@@ -26,10 +26,13 @@ type DatabaseConfig struct {
 }
 
 func Load() *Config{
-	err:= godotenv.Load()
-	if err != nil{
-		log.Fatal(".env error")
-	}
+	// err:= godotenv.Load()
+	// if err != nil{
+	// 	log.Fatal(".env error")
+	// }
+	// Baris ini akan membaca .env jika ada, namun jika tidak ada (seperti di GitHub) kode akan lanjut terus tanpa eror
+_ = godotenv.Load() 
+
 
 	cfg:=&Config{
 		App:AppConfig{
