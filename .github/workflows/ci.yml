@@ -1,0 +1,27 @@
+name: CI core-banking
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  run-app:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Ambil kode dari repositori GitHub
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Install bahasa pemrograman Go di komputer virtual GitHub
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21" # Sesuaikan dengan versi Go Anda
+
+      # 3. Jalankan aplikasi Go dengan memasukkan Secret ke Environment Variable
+      - name: Run Go Application
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }} # Mengambil dari brankas GitHub
+        run: |
+          go run main.go
