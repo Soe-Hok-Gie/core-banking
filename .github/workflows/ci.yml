@@ -25,4 +25,4 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }} # Mengambil dari brankas GitHub
         run: |
           cd cmd
-          go run main.go
+          go build -o app main.go                 # Hanya melakukan compile/build, tidak menyalakan server

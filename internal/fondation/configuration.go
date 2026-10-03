@@ -36,6 +36,9 @@ _ = godotenv.Load()
 		App:AppConfig{
 			Name :os.Getenv ("APP_NAME"),
 			Port :os.Getenv("APP_PORT"),
+			if port == "" {
+    			port = "8080" // Gunakan port default jika kosong
+			}
 			Env :os.Getenv("APP_ENV"),
 		},
 		DB:DatabaseConfig{
