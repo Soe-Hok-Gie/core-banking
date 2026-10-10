@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -19,16 +21,21 @@ func main() {
 	AuthService := service.NewAuthService(userRepository)
 	userController := controller.NewUserController(AuthService)
 
+	r := mux.NewRouter()
+	r.HandleFunc("/auth/register", userController.Register).Methods("POST")
+
+	// serverAddress := ":" + cfg.App.Port
+	// fmt.Println("Server Go berjalan di port", serverAddress)
+
+	// // Menambahkan contoh endpoint agar server bisa diakses
+	// r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// 	fmt.Fprint(w, "Core Banking API is running")
+	// })
+
+	// log.Fatal(http.ListenAndServe(serverAddress, r))
+
+	fmt.Println("Database Connected")
 	serverAddress := ":" + cfg.App.Port
-	fmt.Println("Server Go berjalan di port", serverAddress)
-
-	// Membuat router/mux kosong karena variabel 'r' belum didefinisikan sebelumnya
-	r := http.NewServeMux()
-
-	// Menambahkan contoh endpoint agar server bisa diakses
-	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Core Banking API is running")
-	})
-
+	fmt.Println("server go berjalan", serverAddress)
 	log.Fatal(http.ListenAndServe(serverAddress, r))
 }
