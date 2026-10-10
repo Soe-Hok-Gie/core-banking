@@ -16,6 +16,14 @@ type AuthServiceImp struct {
 	userRepository repository.UserRepository
 }
 
+func NewAuthService(
+	userRepository repository.UserRepository,
+) AuthService {
+	return &AuthServiceImp{
+		userRepository: userRepository,
+	}
+}
+
 var (
 	// error global yang dipakai setiap kali register gagal (name & password are required)
 	ErrInvalidInput      = errors.New("name & password are required")

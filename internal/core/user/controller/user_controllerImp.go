@@ -12,6 +12,14 @@ type UserControllerImp struct {
 	authService service.AuthService
 }
 
+func NewUserController(
+	authsService service.AuthService,
+) UserController {
+	return &UserControllerImp{
+		authService: authsService,
+	}
+}
+
 func (controller *UserControllerImp) Register(writer http.ResponseWriter, request *http.Request) {
 
 	ctx := request.Context()
