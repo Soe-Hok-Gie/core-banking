@@ -86,7 +86,7 @@ func (service *AuthServiceImp) Login(ctx context.Context, input dto.LoginRequest
 		return dto.LoginResponse{}, ErrInvalidCredential
 	}
 
-	user, err := utils.GenerateToken(user.ID)
+	token, err := utils.GenerateToken(user.ID)
 
 	if err != nil {
 		return dto.LoginResponse{}, err
