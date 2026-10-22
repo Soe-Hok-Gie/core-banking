@@ -42,3 +42,17 @@ func (repository *UserRepositoryImp) Insert(ctx context.Context, user domain.Use
 	return user, nil
 
 }
+
+func (repository *UserRepositoryImp) GetByEmail(ctx context.Context, email string) (domain.User, error) {
+
+	script := "SELECT id,name,email,password,status,role_id,created_at FROM users WHERE email = ?"
+	row := repository.DB.QueryRowContext(ctx, script, email)
+
+	var u domain.User
+	err := row.Scan(&u.ID, &u.Name, &u.Email, &u.Password, &u.Status, &u.RoleID, &u.CreatedAt)
+	if err != nil {
+		return u, err
+	}
+	return u, nil
+
+}
