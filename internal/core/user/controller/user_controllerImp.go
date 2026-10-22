@@ -64,3 +64,49 @@ func (controller *UserControllerImp) Register(writer http.ResponseWriter, reques
 		Data:   user,
 	})
 }
+
+func (controller *UserControllerImp) Login(writer http.ResponseWriter, request *http.Request) {
+
+	ctx := request.Context()
+
+	var input dto.LoginRequest
+
+	if err := json.NewDecoder(request.Body).Decode(&input); err != nil {
+		writer.Header().Set("content-type", "application/json")
+		writer.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(writer).Encode(dto.Response{
+			Code:   http.StatusBadRequest,
+			Status: "400",
+			Data:   "Data salah",
+		})
+		return
+	}
+	user, err := controller.authService.Login(ctx, input)
+	if err != nil {
+		writer.Header().Set("content-type", "application/json")
+		if err == service.ErrInvalidCredential {
+			writer.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(writer).Encode(dto.Response{
+				Code:   http.StatusUnauthorized,
+				Status: "401",
+				Data:   "Failed",
+			})
+			return
+		}
+		writer.Header().Set("content-type", "application/json")
+		writer.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(writer).Encode(dto.Response{
+			Code:   http.StatusInternalServerError,
+			Status: "500",
+			Data:   "server error",
+		})
+		return
+	}
+	writer.Header().Set("content-type", "application/json")
+	writer.WriteHeader(http.StatusCreated)
+	json.NewEncoder(writer).Encode(dto.Response{
+		Code:   http.StatusCreated,
+		Status: "201",
+		Data:   user,
+	})
+}
