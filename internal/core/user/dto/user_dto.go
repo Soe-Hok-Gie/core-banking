@@ -22,6 +22,18 @@ type AuthResponse struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+type UserResponse struct {
+	ID        int64     `json:"id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	Role      string    `json:"role"`
+	CreatedAt time.Time `json:"created_at"`
+}
+type LoginResponse struct {
+	User        UserResponse `json:"user"`
+	AccessToken string       `json:"access_token"`
+}
+
 type Response struct {
 	Code   int         `json:"code"`
 	Status string      `json:"status"`
