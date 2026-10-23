@@ -23,6 +23,7 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/auth/register", userController.Register).Methods("POST")
+	r.HandleFunc("/auth/login", userController.Login).Methods("POST")
 
 	// serverAddress := ":" + cfg.App.Port
 	// fmt.Println("Server Go berjalan di port", serverAddress)
