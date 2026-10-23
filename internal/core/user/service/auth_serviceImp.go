@@ -82,7 +82,7 @@ func (service *AuthServiceImp) Login(ctx context.Context, input dto.LoginRequest
 		return dto.LoginResponse{}, ErrInternal
 	}
 
-	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(user.Password)) != nil {
+	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)) != nil {
 		fmt.Println("error credential")
 		return dto.LoginResponse{}, ErrInvalidCredential
 	}
