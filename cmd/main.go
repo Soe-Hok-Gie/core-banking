@@ -18,8 +18,9 @@ func main() {
 	defer db.Close()
 
 	userRepository := repository.NewUserRepository(db)
-	AuthService := service.NewAuthService(userRepository)
-	userController := controller.NewUserController(AuthService)
+	authService := service.NewAuthService(userRepository)
+	userService := service.NewUserService(userRepository)
+	userController := controller.NewUserController(authService, userService)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/auth/register", userController.Register).Methods("POST")
