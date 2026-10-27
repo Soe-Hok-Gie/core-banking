@@ -11,9 +11,13 @@ type userServiceImp struct {
 	UserRepository repository.UserRepository
 }
 
+func NewUserService(userRepository repository.UserRepository) UserService {
+	return &userServiceImp{UserRepository: userRepository}
+}
+
 func (service *userServiceImp) Profile(ctx context.Context, userID int64) (domain.User, dto.UserResponse, error) {
 	//ambil data asli dari domain
-	userDomain, err := service.UserRepository.profile(ctx, userID)
+	userDomain, err := service.UserRepository.GetById(ctx, userID)
 	if err != nil {
 		return domain.User{}, dto.UserResponse{}, err
 	}
