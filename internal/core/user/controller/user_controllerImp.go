@@ -3,20 +3,25 @@ package controller
 import (
 	"core-banking/internal/core/user/dto"
 	"core-banking/internal/core/user/service"
+	"core-banking/middleware"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 )
 
 type UserControllerImp struct {
 	authService service.AuthService
+	userService service.UserService
 }
 
 func NewUserController(
 	authsService service.AuthService,
+	userService service.UserService,
 ) UserController {
 	return &UserControllerImp{
 		authService: authsService,
+		userService: userService,
 	}
 }
 
@@ -100,6 +105,36 @@ func (controller *UserControllerImp) Login(writer http.ResponseWriter, request *
 			Status: "500",
 			Data:   "server error",
 		})
+		return
+	}
+	writer.Header().Set("content-type", "application/json")
+	writer.WriteHeader(http.StatusCreated)
+	json.NewEncoder(writer).Encode(dto.Response{
+		Code:   http.StatusCreated,
+		Status: "201",
+		Data:   user,
+	})
+}
+
+func (controller *UserControllerImp) Profile(writer http.ResponseWriter, request *http.Request) {
+
+	ctx := request.Context()
+
+	userID, ok := request.Context().Value(middleware.UserIDKey).(int64)
+	if !ok {
+		writer.Header().Set("content-type", "application/json")
+		writer.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(writer).Encode(dto.Response{
+			Code:   http.StatusUnauthorized,
+			Status: "401",
+			Data:   "failed",
+		})
+		return
+	}
+	_, user, err := controller.userService.Profile(ctx, userID)
+	if err != nil {
+		fmt.Println("profile error", err)
+		http.Error(writer, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 	writer.Header().Set("content-type", "application/json")
