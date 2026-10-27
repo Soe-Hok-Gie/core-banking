@@ -56,3 +56,15 @@ func (repository *UserRepositoryImp) GetByEmail(ctx context.Context, email strin
 	return u, nil
 
 }
+
+func (repository *UserRepositoryImp) GetById(ctx context.Context, userID int64) (domain.User, error) {
+	script := "SELECT id, name, email, password, status, role_id, created_at, updated_at FROM users WHERE id =?"
+	row := repository.DB.QueryRowContext(ctx, script, userID)
+
+	var u domain.User
+	err := row.Scan(&u.ID, &u.Name, &u.Email, &u.Password, &u.Status, &u.RoleID, &u.CreatedAt, &u.UpdatedAt)
+	if err != nil {
+		return u, err
+	}
+	return u, nil
+}
