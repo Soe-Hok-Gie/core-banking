@@ -26,3 +26,29 @@ func GenerateToken(ID int64) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(secret)
 }
+
+func ValidateToken(tokenstr string) (*int64, error) {
+	secret := (os.Getenv("JWT_SECRET"))
+	if secret == "" {
+		return nil, errors.New("JWT_SECRET IS EMPTY")
+	}
+
+	token, err := jwt.ParseWithClaims(tokenstr, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("EXPECTED SIGN METHOD")
+		}
+		return []byte(secret), nil
+	})
+	if err != nil || !token.Valid {
+		return nil, err
+	}
+	claims, ok := token.Claims.(*jwt.RegisteredClaims)
+	if !ok || !token.Valid {
+		return nil, errors.New("invalid token")
+	}
+	ID, err := strconv.ParseInt(claims.Subject, 10, 64)
+	if err != nil {
+		return nil, errors.New("invalid return error")
+	}
+	return &ID, nil
+}
