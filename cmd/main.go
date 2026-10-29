@@ -5,6 +5,7 @@ import (
 	"core-banking/internal/core/user/repository"
 	"core-banking/internal/core/user/service"
 	"core-banking/internal/fondation"
+	"core-banking/middleware"
 	"fmt"
 	"log"
 	"net/http"
@@ -25,6 +26,9 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/auth/register", userController.Register).Methods("POST")
 	r.HandleFunc("/auth/login", userController.Login).Methods("POST")
+
+	JWTMiddleware := middleware.JWTMiddleware()
+	r.Handle("/auth/login/profile", JWTMiddleware(http.HandlerFunc(userController.Profile))).Methods("GET")
 
 	// serverAddress := ":" + cfg.App.Port
 	// fmt.Println("Server Go berjalan di port", serverAddress)
